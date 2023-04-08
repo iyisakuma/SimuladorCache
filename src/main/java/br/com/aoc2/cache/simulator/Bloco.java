@@ -1,32 +1,22 @@
 package br.com.aoc2.cache.simulator;
 
-public class Bloco {
-    private boolean bitValidade = false;
+public class Bloco implements Cloneable {
+    //Bit de validade
+    private boolean valido = false;
     private String tag;
-    //Como é um simulador, sera guardado o indice.
-    private String info;
+    private int bitsTag;
+    private Palavra[] palavra;
+    private int bitsIndice;
+    private int bitsOffSet;
 
-    public boolean isBitValidade() {
-        return bitValidade;
+    public Bloco(int qntPalavras, int bitsTag, int bitsIndice, int bitsOffSet) {
+        var palavras = new Palavra[qntPalavras];
+        this.bitsTag = bitsTag;
+        this.bitsIndice = bitsIndice;
+        this.bitsOffSet = bitsOffSet;
     }
 
-    public void setBitValidade(boolean bitValidade) {
-        this.bitValidade = bitValidade;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
+    public Object clone() throws CloneNotSupportedException{
+        return super.clone();
     }
 }

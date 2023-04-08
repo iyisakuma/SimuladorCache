@@ -10,7 +10,8 @@ public class Cache {
     private int totalHit = 0;
     private PoliticaSubstituicao politicaSubstituicao;
 
-    public Cache(Conjunto[] conjuntos) {
-        this.conjuntos = conjuntos;
+    public Cache(int numeroConjutos, Conjunto conjunto,  PoliticaSubstituicao politicaSubstituicao) {
+        this.politicaSubstituicao = politicaSubstituicao;
+
     }
 }

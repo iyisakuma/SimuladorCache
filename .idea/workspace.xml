@@ -4,27 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/PoliticaSubstituicao.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/enderecos/bin_100.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/enderecos/bin_100.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/enderecos/bin_1000.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/enderecos/bin_1000.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/enderecos/bin_10000.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/enderecos/bin_10000.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/enderecos/desktop.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/enderecos/vortex.in.sem.persons.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/enderecos/vortex.in.sem.persons.txt" afterDir="false" />
+    <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String).">
+      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Palavra.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,23 +45,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/home/yujisakuma/Pessoal/Faculdade/AOC2/SimuladorCache/src/main/resources",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/yujisakuma/Pessoal/Faculdade/AOC2/SimuladorCache/src/main/resources&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
@@ -89,11 +76,24 @@
       <option name="presentableId" value="Default" />
       <updated>1680882778921</updated>
       <workItem from="1680882780178" duration="5879000" />
-      <workItem from="1680890073129" duration="8172000" />
+      <workItem from="1680890073129" duration="8364000" />
+      <workItem from="1680971799445" duration="6527000" />
     </task>
+    <task id="LOCAL-00001" summary="Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String).">
+      <created>1680898396325</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1680898396326</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String)." />
+    <option name="LAST_COMMIT_MESSAGE" value="Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String)." />
   </component>
 </project>
