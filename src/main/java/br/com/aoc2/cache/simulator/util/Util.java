@@ -42,27 +42,47 @@ public class Util {
 
     public static String processaDados(Cache cache, String nomeArquivo, boolean saidaPadrao) {
         InputStream in = null;
+        var resultado = new StringBuilder("");
         try {
             in = new BufferedInputStream(new FileInputStream("./src/main/resources/enderecos/" + nomeArquivo));
             byte[] bytes = new byte[4];
+            //Ler ate o final do arquivo
             while ((in.read(bytes)) != -1) {
-                System.out.println(Util.arrayBytesToBits(bytes));
+                var enderecoMemoria = Util.arrayBytesToBits(bytes);
+                resultado.append(enderecoMemoria + "\n");
+                var nroConjuntos = cache.getConjuntos().length;
+                var enderecoCache = Util.parseBinarieToInt(enderecoMemoria) % nroConjuntos;
+                var conjuntoDaCache = cache.getConjuntos()[enderecoCache];
+
+
             }
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Arquivo não encontrado!");
         } finally {
             Util.fechaFluxoDados(in);
         }
-        return "";
+        return resultado.toString();
     }
 
     private static Conjunto criaConjuntoParaCache(int tamanhoBloco, int grauAssociatividade, int nroConjuntos) {
         //Calculo de quantidades de palavras de 4bytes (32 bits)
-        int qntPalavras = tamanhoBloco/4;
-        int bitsOffSet = (int)(Math.log(qntPalavras) / Math.log(2));
-        int bitsIndice = (int)(Math.log(nroConjuntos) / Math.log(2));
+        int qntPalavras = tamanhoBloco / 4;
+        int bitsOffSet = (int) (Math.log(qntPalavras) / Math.log(2));
+        int bitsIndice = (int) (Math.log(nroConjuntos) / Math.log(2));
         int bitsTag = 32 - (bitsIndice + bitsOffSet);
         var bloco = new Bloco(qntPalavras, bitsTag, bitsIndice, bitsOffSet);
         return new Conjunto(grauAssociatividade, bloco);
+    }
+
+    public static int parseBinarieToInt(String bits) {
+        int contador = 0;
+        int j = 0;
+        for (int i = bits.length() - 1; i >= 0; i--) {
+            if (bits.charAt(i) == '1') {
+                contador += Math.pow(2.0, j);
+            }
+            j++;
+        }
+        return contador;
     }
 }
