@@ -5,7 +5,6 @@ import static br.com.aoc2.cache.simulator.util.Util.*;
 import java.io.*;
 public class Main {
     public static void main(String[] args) {
-        args = "16 2 8 R 1 bin_10000.bin".split(" ");
         if (comandoDeLinhaEhValido(args)) {
             var cache = criaCache(args);
             boolean saidaPadrao = args[4].equals("1");
