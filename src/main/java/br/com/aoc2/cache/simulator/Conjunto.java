@@ -2,15 +2,11 @@ package br.com.aoc2.cache.simulator;
 
 import br.com.aoc2.cache.simulator.util.Util;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
-
 public class Conjunto {
     private Bloco[] blocos;
 
 
-    public Conjunto(int grauAssociatividade, Bloco[] blocos) {
+    public Conjunto(Bloco[] blocos) {
         this.blocos = blocos;
     }
 
@@ -18,41 +14,43 @@ public class Conjunto {
         return blocos;
     }
 
-    public void setBlocos(Bloco[] blocos) {
-        this.blocos = blocos;
-    }
 
-
-    public Miss contem(String enderecoBinario, int bitsTag) {
+    public Miss contem(String enderecoBinario, int bitTag) {
         boolean hit = false;
-        boolean missCompulsorio = true;
+        boolean missCompulsorio = false;
+        boolean missConflito = false;
 
         for (var bloco : blocos) {
             if (bloco.isValido()) {
-                missCompulsorio = false;
                 var decimal = Util.parseBinarieToDecimal(enderecoBinario);
-                String tag = enderecoBinario.substring(0, bitsTag - 1);
-                var enderecoDecimal = String.valueOf(decimal);
-                if (tag.equals(bloco.getTag()) && bloco.getInfo().equals(enderecoDecimal)) {
+                String tag = enderecoBinario.substring(0, bitTag - 1);
+                if (tag.equals(bloco.getTag())) {
                     hit = true;
                     break;
+                } else {
+                    missConflito = true;
+                    missCompulsorio = false;
                 }
+            }else{
+                missCompulsorio = true;
             }
-        }var decimal = Util.parseBinarieToDecimal(enderecoBinario);
-        if (missCompulsorio) {
-            return Miss.COMPULSORIO;
+
         }
+
         if (hit) {
             return Miss.NAO_HOUVE;
+        } else if (missCompulsorio) {
+            var enderecoDecimal = String.valueOf(Util.parseBinarieToDecimal(enderecoBinario));
+            return Miss.COMPULSORIO;
         } else {
-            return blocos.length == 1 ? Miss.CONFLITO : Miss.CAPACIDADE;
+            return missConflito ? Miss.CONFLITO : Miss.CAPACIDADE;
         }
 
     }
 
     public boolean contemBlocoVago() {
         for (var bloco : blocos) {
-            if (bloco.getInfo().isEmpty()) {
+            if (bloco.isInfoVazia()) {
                 return true;
             }
         }

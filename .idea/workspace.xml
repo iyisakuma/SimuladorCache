@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="criado processo para verificar se ha hit ou miss na cache">
+    <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="criado processo para tratar fault">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Palavra.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -176,7 +174,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681876435252</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="criado processo para tratar fault">
+      <created>1681892941175</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1681892941175</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -186,20 +191,26 @@
     <MESSAGE value="Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String)." />
     <MESSAGE value="criado construtur para palavras, blocos e Conjunto. Alem disso, coloquei os metodos no util" />
     <MESSAGE value="criado processo para verificar se ha hit ou miss na cache" />
-    <option name="LAST_COMMIT_MESSAGE" value="criado processo para verificar se ha hit ou miss na cache" />
+    <MESSAGE value="criado processo para tratar fault" />
+    <option name="LAST_COMMIT_MESSAGE" value="criado processo para tratar fault" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java</url>
-          <line>11</line>
-          <option name="timeStamp" value="2" />
+          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java</url>
+          <line>96</line>
+          <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java</url>
-          <line>42</line>
-          <option name="timeStamp" value="12" />
+          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java</url>
+          <line>37</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java</url>
+          <line>45</line>
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

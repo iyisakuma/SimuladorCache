@@ -72,7 +72,7 @@ public class Util {
          * Calculo para encontrar quantos bits do endereco eh utilizado para a tag
          * */
         int bitsTag = 32 - (bitsIndice + bitsOffSet);
-        return new Cache(nroConjuntos, grauAssociatividade, bitsTag, bitsIndice,politicaSubstituicao);
+        return new Cache(nroConjuntos, grauAssociatividade, bitsTag, bitsIndice, tamanhoBloco,politicaSubstituicao);
     }
 
 

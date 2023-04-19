@@ -1,12 +1,18 @@
 package br.com.aoc2.cache.simulator;
 
-public class Bloco implements Cloneable {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Bloco {
     //Bit de validade
     private boolean valido = false;
     private String tag="";
-    private String info="";
+    private List<String> infos= new ArrayList<>();
 
-    public Bloco() {
+    private int tamanho;
+
+    public Bloco(int tamanhoBloco) {
+        this.tamanho = tamanhoBloco;
     }
 
     public boolean isValido() {
@@ -25,15 +31,25 @@ public class Bloco implements Cloneable {
         this.tag = tag;
     }
 
-    public String getInfo() {
-        return info;
+    public void addInfo(int info){
+        int aux = this.tamanho;
+        int contador = 0;
+        while (aux > 0) {
+            int vizinho = info +  contador;
+            this.infos.add(String.valueOf(vizinho));
+            aux--;
+            contador++;
+        }
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public boolean contem(String info){
+        return infos.contains(info);
     }
 
-    public Object clone() throws CloneNotSupportedException{
-        return super.clone();
+    public boolean isInfoVazia(){
+        return infos.isEmpty();
     }
+
+
+
 }
