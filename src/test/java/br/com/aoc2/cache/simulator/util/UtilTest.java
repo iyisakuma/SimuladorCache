@@ -8,6 +8,6 @@ public class UtilTest extends TestCase {
     @Test
     public void testParseStringToBinarie() {
         var bits = "000";
-        Assert.assertEquals(0, Util.parseBinarieToInt(bits));
+        Assert.assertEquals(0, Util.parseBinarieToDecimal(bits));
     }
 }

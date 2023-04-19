@@ -4,16 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="criado construtur para palavras, blocos e Conjunto. Alem disso, coloquei os metodos no util">
-      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Operacoes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/br/com/aoc2/cache/simulator/util/UtilTest.java" afterDir="false" />
+    <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="criado construtur para palavras.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Miss.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Palavra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Palavra.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/br/com/aoc2/cache/simulator/util/UtilTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/br/com/aoc2/cache/simulator/util/UtilTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,14 +22,31 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="JUnit3 Test Class" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
+  <component name="Git.Rebase.Settings">
+    <option name="NEW_BASE" value="master" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="bb1dbae7-b613-486c-af72-8f1e1e43f447" />
+        <option name="url" value="https://github.com/iyisakuma/SimuladorCache.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -56,6 +72,7 @@
     "WebServerToolWindowFactoryState": "false",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit3",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit3": "junit.framework.TestCase",
+    "dart.analysis.tool.window.visible": "false",
     "last_opened_file_path": "/home/yujisakuma/Pessoal/Estudos/Java/Spring/taco-cloud",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",

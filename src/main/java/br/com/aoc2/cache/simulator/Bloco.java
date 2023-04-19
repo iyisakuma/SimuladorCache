@@ -4,16 +4,10 @@ public class Bloco implements Cloneable {
     //Bit de validade
     private boolean valido = false;
     private String tag;
-    private int bitsTag;
     private Palavra[] palavras;
-    private int bitsIndice;
-    private int bitsOffSet;
 
-    public Bloco(int qntPalavras, int bitsTag, int bitsIndice, int bitsOffSet) {
+    public Bloco(int qntPalavras) {
         this.palavras = new Palavra[qntPalavras];
-        this.bitsTag = bitsTag;
-        this.bitsIndice = bitsIndice;
-        this.bitsOffSet = bitsOffSet;
     }
 
     public boolean isValido() {
@@ -32,14 +26,6 @@ public class Bloco implements Cloneable {
         this.tag = tag;
     }
 
-    public int getBitsTag() {
-        return bitsTag;
-    }
-
-    public void setBitsTag(int bitsTag) {
-        this.bitsTag = bitsTag;
-    }
-
     public Palavra[] getPalavras() {
         return palavras;
     }
@@ -48,21 +34,6 @@ public class Bloco implements Cloneable {
         this.palavras = palavras;
     }
 
-    public int getBitsIndice() {
-        return bitsIndice;
-    }
-
-    public void setBitsIndice(int bitsIndice) {
-        this.bitsIndice = bitsIndice;
-    }
-
-    public int getBitsOffSet() {
-        return bitsOffSet;
-    }
-
-    public void setBitsOffSet(int bitsOffSet) {
-        this.bitsOffSet = bitsOffSet;
-    }
 
     public Object clone() throws CloneNotSupportedException{
         return super.clone();

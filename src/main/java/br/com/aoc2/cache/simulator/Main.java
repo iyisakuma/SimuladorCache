@@ -7,10 +7,10 @@ public class Main {
     public static void main(String[] args) {
         if (comandoDeLinhaEhValido(args)) {
             var cache = criaCache(args);
-            boolean isSaidaPadrao = args[4].equals("1");
+            boolean saidaPadrao = args[4].equals("1");
             var nomeArquivo = args[5];
-            var resultado = processaDados(cache, nomeArquivo, isSaidaPadrao);
-            System.out.println(resultado);
+            processaDados(cache, nomeArquivo);
+            System.out.println(cache.mostraResultado(saidaPadrao));
         } else {
             System.out.println("O comando de linha não é válido.");
         }

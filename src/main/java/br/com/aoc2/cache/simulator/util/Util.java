@@ -8,6 +8,27 @@ import java.util.logging.Logger;
 
 public class Util {
 
+    public static void processaDados(Cache cache, String nomeArquivo) {
+        InputStream in = null;
+        var resultado = new StringBuilder("");
+        try {
+            in = new BufferedInputStream(new FileInputStream("./src/main/resources/enderecos/" + nomeArquivo));
+            byte[] bytes = new byte[4];
+            //Ler ate o final do arquivo
+            while ((in.read(bytes)) != -1) {
+                var enderecoMemoriaBits = Util.arrayBytesToBits(bytes);
+                var hit = cache.contem(enderecoMemoriaBits);
+                if (!hit) {
+                    cache.tratamentoFalta(enderecoMemoriaBits);
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Arquivo não encontrado!");
+        } finally {
+            Util.fechaFluxoDados(in);
+        }
+    }
+
     public static boolean comandoDeLinhaEhValido(String[] args) {
         return args.length == 6;
     }
@@ -40,41 +61,30 @@ public class Util {
         return new Cache(nroConjuntos, conjunto, politicaSubstituicao);
     }
 
-    public static String processaDados(Cache cache, String nomeArquivo, boolean saidaPadrao) {
-        InputStream in = null;
-        var resultado = new StringBuilder("");
-        try {
-            in = new BufferedInputStream(new FileInputStream("./src/main/resources/enderecos/" + nomeArquivo));
-            byte[] bytes = new byte[4];
-            //Ler ate o final do arquivo
-            while ((in.read(bytes)) != -1) {
-                var enderecoMemoria = Util.arrayBytesToBits(bytes);
-                resultado.append(enderecoMemoria + "\n");
-                var nroConjuntos = cache.getConjuntos().length;
-                var enderecoCache = Util.parseBinarieToInt(enderecoMemoria) % nroConjuntos;
-                var conjuntoDaCache = cache.getConjuntos()[enderecoCache];
-
-
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Arquivo não encontrado!");
-        } finally {
-            Util.fechaFluxoDados(in);
-        }
-        return resultado.toString();
-    }
 
     private static Conjunto criaConjuntoParaCache(int tamanhoBloco, int grauAssociatividade, int nroConjuntos) {
         //Calculo de quantidades de palavras de 4bytes (32 bits)
         int qntPalavras = tamanhoBloco / 4;
+
+        /*
+         * Calculo para encontrar quantos bits do endereco eh utilizado para offset
+         * */
         int bitsOffSet = (int) (Math.log(qntPalavras) / Math.log(2));
+
+        /*
+         * Calculo para encontrar quantos bits do endereco eh utilizado para o indice
+         * */
         int bitsIndice = (int) (Math.log(nroConjuntos) / Math.log(2));
+
+        /*
+         * Calculo para encontrar quantos bits do endereco eh utilizado para a tag
+         * */
         int bitsTag = 32 - (bitsIndice + bitsOffSet);
-        var bloco = new Bloco(qntPalavras, bitsTag, bitsIndice, bitsOffSet);
-        return new Conjunto(grauAssociatividade, bloco);
+        var bloco = new Bloco(qntPalavras);
+        return new Conjunto(grauAssociatividade, bloco, bitsTag, bitsIndice, bitsOffSet);
     }
 
-    public static int parseBinarieToInt(String bits) {
+    public static int parseBinarieToDecimal(String bits) {
         int contador = 0;
         int j = 0;
         for (int i = bits.length() - 1; i >= 0; i--) {
