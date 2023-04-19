@@ -95,6 +95,7 @@ public class Cache {
 
 
     public void tratamentoFalta(String enderecoMemoriaBits) {
+
     }
 
     public String mostraResultado(boolean isSaidaPadrao) {

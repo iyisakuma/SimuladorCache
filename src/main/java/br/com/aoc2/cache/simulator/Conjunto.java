@@ -58,7 +58,7 @@ public class Conjunto implements Cloneable {
         if (hit) {
             return Miss.NAO_HOUVE;
         } else {
-            return Miss.CAPACIDADE;
+            return blocos.length == 1 ? Miss.CONFLITO : Miss.CAPACIDADE;
         }
 
     }

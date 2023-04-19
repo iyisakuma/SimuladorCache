@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="criado construtur para palavras.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Miss.java" afterDir="false" />
+    <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="criado processo para verificar se ha hit ou miss na cache">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/br/com/aoc2/cache/simulator/util/UtilTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/br/com/aoc2/cache/simulator/util/UtilTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,7 +144,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680979458372</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="criado processo para verificar se ha hit ou miss na cache">
+      <created>1681875661270</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1681875661271</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -158,6 +160,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String)." />
     <MESSAGE value="criado construtur para palavras, blocos e Conjunto. Alem disso, coloquei os metodos no util" />
-    <option name="LAST_COMMIT_MESSAGE" value="criado construtur para palavras, blocos e Conjunto. Alem disso, coloquei os metodos no util" />
+    <MESSAGE value="criado processo para verificar se ha hit ou miss na cache" />
+    <option name="LAST_COMMIT_MESSAGE" value="criado processo para verificar se ha hit ou miss na cache" />
   </component>
 </project>
