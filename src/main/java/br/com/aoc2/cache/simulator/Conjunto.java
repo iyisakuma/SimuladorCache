@@ -1,30 +1,16 @@
 package br.com.aoc2.cache.simulator;
 
+import br.com.aoc2.cache.simulator.util.Util;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class Conjunto implements Cloneable {
+public class Conjunto {
     private Bloco[] blocos;
 
-    private int bitsIndice;
-    private int bitsOffSet;
 
-    private int bitsTag;
-
-    public Conjunto(int grauAssociatividade, Bloco bloco, int bitsTag, int bitsIndice, int bitsOffSet) {
-        var blocos = new Bloco[grauAssociatividade];
-        for (int i = 0; i < grauAssociatividade; i++) {
-            try {
-                blocos[i] = (Bloco) bloco.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        this.bitsTag = bitsTag;
-        this.bitsIndice = bitsIndice;
-        this.bitsOffSet = bitsOffSet;
+    public Conjunto(int grauAssociatividade, Bloco[] blocos) {
         this.blocos = blocos;
     }
 
@@ -36,24 +22,25 @@ public class Conjunto implements Cloneable {
         this.blocos = blocos;
     }
 
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
 
-    public Miss contem(String enderecoBinario) {
+    public Miss contem(String enderecoBinario, int bitsTag) {
         boolean hit = false;
-        //Verifica se ha blocos validos
-        List<Bloco> blocosValidos = Arrays.stream(blocos).filter(Bloco::isValido).toList();
-        if (blocosValidos.isEmpty()) {
-            return Miss.COMPULSORIO;
-        }
-        for (var bloco : blocosValidos) {
-            String tag = enderecoBinario.substring(0, bitsTag-1);
-            List<Palavra> palavras = Arrays.stream(bloco.getPalavras()).toList();
-            if (tag.equals(bloco.getTag()) && palavras.contains(enderecoBinario)) {
-                hit = true;
-                break;
+        boolean missCompulsorio = true;
+
+        for (var bloco : blocos) {
+            if (bloco.isValido()) {
+                missCompulsorio = false;
+                var decimal = Util.parseBinarieToDecimal(enderecoBinario);
+                String tag = enderecoBinario.substring(0, bitsTag - 1);
+                var enderecoDecimal = String.valueOf(decimal);
+                if (tag.equals(bloco.getTag()) && bloco.getInfo().equals(enderecoDecimal)) {
+                    hit = true;
+                    break;
+                }
             }
+        }var decimal = Util.parseBinarieToDecimal(enderecoBinario);
+        if (missCompulsorio) {
+            return Miss.COMPULSORIO;
         }
         if (hit) {
             return Miss.NAO_HOUVE;
@@ -61,5 +48,14 @@ public class Conjunto implements Cloneable {
             return blocos.length == 1 ? Miss.CONFLITO : Miss.CAPACIDADE;
         }
 
+    }
+
+    public boolean contemBlocoVago() {
+        for (var bloco : blocos) {
+            if (bloco.getInfo().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

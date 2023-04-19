@@ -3,11 +3,10 @@ package br.com.aoc2.cache.simulator;
 public class Bloco implements Cloneable {
     //Bit de validade
     private boolean valido = false;
-    private String tag;
-    private Palavra[] palavras;
+    private String tag="";
+    private String info="";
 
-    public Bloco(int qntPalavras) {
-        this.palavras = new Palavra[qntPalavras];
+    public Bloco() {
     }
 
     public boolean isValido() {
@@ -26,14 +25,13 @@ public class Bloco implements Cloneable {
         this.tag = tag;
     }
 
-    public Palavra[] getPalavras() {
-        return palavras;
+    public String getInfo() {
+        return info;
     }
 
-    public void setPalavras(Palavra[] palavras) {
-        this.palavras = palavras;
+    public void setInfo(String info) {
+        this.info = info;
     }
-
 
     public Object clone() throws CloneNotSupportedException{
         return super.clone();

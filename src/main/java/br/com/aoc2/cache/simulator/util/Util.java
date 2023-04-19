@@ -10,7 +10,6 @@ public class Util {
 
     public static void processaDados(Cache cache, String nomeArquivo) {
         InputStream in = null;
-        var resultado = new StringBuilder("");
         try {
             in = new BufferedInputStream(new FileInputStream("./src/main/resources/enderecos/" + nomeArquivo));
             byte[] bytes = new byte[4];
@@ -53,23 +52,16 @@ public class Util {
     }
 
     public static Cache criaCache(String[] args) {
+
         int nroConjuntos = Integer.parseInt(args[0]);
         int tamanhoBloco = Integer.parseInt(args[1]);
         int grauAssociatividade = Integer.parseInt(args[2]);
         var politicaSubstituicao = PoliticaSubstituicao.valor(args[3]);
-        var conjunto = criaConjuntoParaCache(tamanhoBloco, grauAssociatividade, nroConjuntos);
-        return new Cache(nroConjuntos, conjunto, politicaSubstituicao);
-    }
-
-
-    private static Conjunto criaConjuntoParaCache(int tamanhoBloco, int grauAssociatividade, int nroConjuntos) {
-        //Calculo de quantidades de palavras de 4bytes (32 bits)
-        int qntPalavras = tamanhoBloco / 4;
 
         /*
          * Calculo para encontrar quantos bits do endereco eh utilizado para offset
          * */
-        int bitsOffSet = (int) (Math.log(qntPalavras) / Math.log(2));
+        int bitsOffSet = (int) (Math.log(tamanhoBloco) / Math.log(2));
 
         /*
          * Calculo para encontrar quantos bits do endereco eh utilizado para o indice
@@ -80,9 +72,10 @@ public class Util {
          * Calculo para encontrar quantos bits do endereco eh utilizado para a tag
          * */
         int bitsTag = 32 - (bitsIndice + bitsOffSet);
-        var bloco = new Bloco(qntPalavras);
-        return new Conjunto(grauAssociatividade, bloco, bitsTag, bitsIndice, bitsOffSet);
+        return new Cache(nroConjuntos, grauAssociatividade, bitsTag, bitsIndice,politicaSubstituicao);
     }
+
+
 
     public static int parseBinarieToDecimal(String bits) {
         int contador = 0;

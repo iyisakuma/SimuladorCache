@@ -1,27 +1,39 @@
 package br.com.aoc2.cache.simulator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 import static br.com.aoc2.cache.simulator.util.Util.*;
 import static br.com.aoc2.cache.simulator.Miss.*;
 
 public class Cache {
     private Conjunto[] conjuntos;
-    private int totalAcesso = 0;
-    private int totalMiss = 0;
-    private int qntMissCompulsorio = 0;
-    private int qntMissCapacidade = 0;
-    private int qntMissConflito = 0;
-    private int totalHit = 0;
+    private double totalAcesso = 0;
+    private double totalMiss = 0;
+    private double qntMissCompulsorio = 0;
+    private double qntMissCapacidade = 0;
+    private double qntMissConflito = 0;
+    private double totalHit = 0;
+
+    private int bitsIndice;
+    private int bitsTag;
     private PoliticaSubstituicao politicaSubstituicao;
 
-    public Cache(int numeroConjutos, Conjunto conjunto, PoliticaSubstituicao politicaSubstituicao) {
+    private List<Integer> aux = new ArrayList<>();
+
+    public Cache(int numeroConjutos, int grauAssociatividade, int bitsTag, int bitsIndice, PoliticaSubstituicao politicaSubstituicao) {
         this.politicaSubstituicao = politicaSubstituicao;
-        this.conjuntos = new Conjunto[numeroConjutos];
-        for (int i = 0; i < numeroConjutos; i++) {
-            try {
-                this.conjuntos[i] = (Conjunto) conjunto.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
+        this.bitsTag = bitsTag;
+        this.bitsIndice = bitsIndice;
+        this.conjuntos = new Conjunto[numeroConjutos/grauAssociatividade];
+        for (int i = 0; i < numeroConjutos/grauAssociatividade; i++) {
+            Bloco[] blocos = new Bloco[grauAssociatividade];
+            for (int j = 0; j <grauAssociatividade; j++){
+                blocos[j] = new Bloco();
             }
+            this.conjuntos[i] = new Conjunto(grauAssociatividade, blocos);
         }
     }
 
@@ -29,29 +41,6 @@ public class Cache {
         return conjuntos;
     }
 
-    public int getTotalAcesso() {
-        return totalAcesso;
-    }
-
-    public int getTotalMiss() {
-        return totalMiss;
-    }
-
-    public int getQntMissCompulsorio() {
-        return qntMissCompulsorio;
-    }
-
-    public int getQntMissCapacidade() {
-        return qntMissCapacidade;
-    }
-
-    public int getQntMissConflito() {
-        return qntMissConflito;
-    }
-
-    public int getTotalHit() {
-        return totalHit;
-    }
 
     public PoliticaSubstituicao getPoliticaSubstituicao() {
         return politicaSubstituicao;
@@ -62,15 +51,15 @@ public class Cache {
     }
 
     public boolean contem(String enderecoBinario) {
-        var nroConjuntos = this.getConjuntos().length;
+        var nroConjuntos = conjuntos.length;
         var enderecoDecimal = parseBinarieToDecimal(enderecoBinario);
-        var indiceCache = enderecoDecimal % nroConjuntos;
-        var conjunto = this.getConjuntos()[indiceCache];
+        var indiceCache = enderecoDecimal % (nroConjuntos);
+        var conjunto = conjuntos[indiceCache];
 
 
         boolean hit = false;
         this.addAcesso();
-        Miss miss = conjunto.contem(enderecoBinario);
+        Miss miss = conjunto.contem(enderecoBinario, bitsTag);
         switch (miss) {
             case CONFLITO:
                 addTotalMiss();
@@ -81,6 +70,10 @@ public class Cache {
                 addMissCapacidade();
                 break;
             case COMPULSORIO:
+                if(aux.contains(enderecoDecimal)){
+                    System.out.println(enderecoDecimal);
+                }
+                aux.add(enderecoDecimal);
                 addTotalMiss();
                 addMissCompulsorio();
                 break;
@@ -94,24 +87,52 @@ public class Cache {
     }
 
 
-    public void tratamentoFalta(String enderecoMemoriaBits) {
-
+    public void tratamentoFalta(String enderecoBinario) {
+        var nroConjuntos = this.getConjuntos().length;
+        int enderecoDecimal = parseBinarieToDecimal(enderecoBinario);
+        var indiceCache = enderecoDecimal % (nroConjuntos);
+        var conjunto = this.getConjuntos()[indiceCache];
+        if (conjunto.contemBlocoVago()) {
+            for (var bloco : conjunto.getBlocos()) {
+                if (bloco.getInfo().isEmpty()) {
+                    bloco.setValido(true);
+                    bloco.setInfo(String.valueOf(enderecoDecimal));
+                    bloco.setTag(enderecoBinario.substring(0, bitsTag - 1));
+                }
+            }
+        } else {
+            switch (politicaSubstituicao) {
+                case RANDOM:
+                    var random = new Random();
+                    int nroBlocos = conjunto.getBlocos().length;
+                    int indiceBloco = random.nextInt(nroBlocos);
+                    var bloco = conjunto.getBlocos()[indiceBloco];
+                    bloco.setInfo(String.valueOf(enderecoDecimal));
+                    bloco.setTag(enderecoBinario.substring(0, bitsTag - 1));
+                    break;
+            }
+        }
     }
 
     public String mostraResultado(boolean isSaidaPadrao) {
         if (isSaidaPadrao) {
             var qntMiss = (qntMissCapacidade + qntMissCompulsorio + qntMissConflito);
-            var taxaMiss = (qntMiss / totalAcesso);
-            var taxaHit = 1 - taxaMiss;
-            var taxaMissCompulsorio = qntMissCompulsorio / qntMiss;
-            var taxaMissCapacidade = qntMissCapacidade / qntMiss;
-            var taxaMissConflito = qntMissConflito / qntMiss;
-            System.out.println(taxaMissCapacidade);
-            return String.format("%d, %d, %d, %d, %d, %d ",
+            double taxaMiss = (qntMiss / totalAcesso);
+            double taxaHit = 1 - taxaMiss;
+            double taxaMissCompulsorio = qntMissCompulsorio / qntMiss;
+            double taxaMissCapacidade = qntMissCapacidade / qntMiss;
+            double taxaMissConflito = qntMissConflito / qntMiss;
+            return String.format("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f ",
                     totalAcesso, taxaHit, taxaMiss, taxaMissCompulsorio,
                     taxaMissCapacidade, taxaMissConflito);
         } else {
-            return "";
+            var quantidadeMiss = (qntMissCapacidade + qntMissCompulsorio + qntMissConflito);
+            var txMiss = (quantidadeMiss / totalAcesso);
+            var txHit = 1 - txMiss;
+            var txMissCompulsorio = qntMissCompulsorio / quantidadeMiss;
+            var txMissCapacidade = qntMissCapacidade / quantidadeMiss;
+            var txMissConflito = qntMissConflito / quantidadeMiss;
+            return String.format("O total de acessos foi de: " + totalAcesso + "\n" + "A quantidade de miss total eh: " + quantidadeMiss + "\n" + "A taxa de miss: " + txMiss * 100 + "\n" + "A taxa de hit: " + txHit * 100 + "\n" + "A taxa de miss de Capacidade: " + txMissCapacidade * 100 + "\n" + "A taxa de miss Compulsório: " + txMissCompulsorio * 100 + "\n" + "A taxa de miss de Conflito: " + txMissConflito * 100);
         }
     }
 
@@ -137,5 +158,18 @@ public class Cache {
 
     private void addTotalHit() {
         this.totalHit++;
+    }
+
+    @Override
+    public String toString() {
+        return "Cache{" +
+                ", totalAcesso=" + totalAcesso +
+                ", totalMiss=" + totalMiss +
+                ", qntMissCompulsorio=" + qntMissCompulsorio +
+                ", qntMissCapacidade=" + qntMissCapacidade +
+                ", qntMissConflito=" + qntMissConflito +
+                ", totalHit=" + totalHit +
+                ", politicaSubstituicao=" + politicaSubstituicao +
+                '}';
     }
 }

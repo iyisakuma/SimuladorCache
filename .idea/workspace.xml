@@ -6,8 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="criado processo para verificar se ha hit ou miss na cache">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Palavra.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +95,20 @@
       <recent name="br.com.aoc2.cache.simulator.util" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="br.com.aoc2.cache.simulator.Main" />
+      <module name="cache_simulator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="br.com.aoc2.cache.simulator.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="UtilTest.testParseStringToBinarie" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="cache_simulator" />
       <extension name="coverage">
@@ -110,6 +127,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.UtilTest.testParseStringToBinarie" />
       </list>
     </recent_temporary>
@@ -151,7 +169,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681875661271</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="criado processo para verificar se ha hit ou miss na cache">
+      <created>1681876435252</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1681876435252</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,5 +187,28 @@
     <MESSAGE value="criado construtur para palavras, blocos e Conjunto. Alem disso, coloquei os metodos no util" />
     <MESSAGE value="criado processo para verificar se ha hit ou miss na cache" />
     <option name="LAST_COMMIT_MESSAGE" value="criado processo para verificar se ha hit ou miss na cache" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java</url>
+          <line>11</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java</url>
+          <line>42</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="br.com.aoc2.cache.simulator.Cache" memberName="conjuntos" />
+        <PinnedItemInfo parentTag="br.com.aoc2.cache.simulator.Conjunto" memberName="blocos" />
+        <PinnedItemInfo parentTag="br.com.aoc2.cache.simulator.Bloco" memberName="valido" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>
