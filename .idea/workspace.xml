@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="criado processo para tratar fault">
+      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/TipoEnderecamento.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Operacoes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,11 +35,11 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="UPDATE_TYPE" value="REBASE" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -58,27 +64,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit3",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit3": "junit.framework.TestCase",
-    "dart.analysis.tool.window.visible": "false",
-    "last_opened_file_path": "/home/yujisakuma/Pessoal/Estudos/Java/Spring/taco-cloud",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit3&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit3&quot;: &quot;junit.framework.TestCase&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/yujisakuma/Pessoal/Estudos/Java/Spring/taco-cloud&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
@@ -142,6 +148,10 @@
       <workItem from="1681179642567" duration="2896000" />
       <workItem from="1681313082501" duration="2866000" />
       <workItem from="1681317596439" duration="733000" />
+      <workItem from="1681927764395" duration="3260000" />
+      <workItem from="1682020747272" duration="935000" />
+      <workItem from="1682021695713" duration="11176000" />
+      <workItem from="1682032953933" duration="8318000" />
     </task>
     <task id="LOCAL-00001" summary="Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String).">
       <created>1680898396325</created>
@@ -185,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681914803826</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="criado processo para tratar fault">
+      <created>1681915273118</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1681915273118</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -203,27 +220,21 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java</url>
-          <line>96</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java</url>
-          <line>37</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java</url>
-          <line>45</line>
-          <option name="timeStamp" value="28" />
+          <line>63</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="br.com.aoc2.cache.simulator.Cache" memberName="conjuntos" />
-        <PinnedItemInfo parentTag="br.com.aoc2.cache.simulator.Conjunto" memberName="blocos" />
         <PinnedItemInfo parentTag="br.com.aoc2.cache.simulator.Bloco" memberName="valido" />
       </pinned-members>
     </pin-to-top-manager>
+    <watches-manager>
+      <inline-watch fileUrl="file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" line="26">
+        <watch expression="enderecoBinario" language="JAVA" />
+      </inline-watch>
+    </watches-manager>
   </component>
 </project>

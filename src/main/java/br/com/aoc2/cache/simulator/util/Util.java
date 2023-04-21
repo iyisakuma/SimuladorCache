@@ -3,6 +3,7 @@ package br.com.aoc2.cache.simulator.util;
 import br.com.aoc2.cache.simulator.*;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -72,7 +73,7 @@ public class Util {
          * Calculo para encontrar quantos bits do endereco eh utilizado para a tag
          * */
         int bitsTag = 32 - (bitsIndice + bitsOffSet);
-        return new Cache(nroConjuntos, grauAssociatividade, bitsTag, bitsIndice, tamanhoBloco,politicaSubstituicao);
+        return new Cache(nroConjuntos, grauAssociatividade, bitsTag, tamanhoBloco, politicaSubstituicao);
     }
 
 
@@ -88,4 +89,18 @@ public class Util {
         }
         return contador;
     }
+
+    public static int calculaIndiceCache(String enderecoBinario, int nroConjuntos, int bSize){
+        int enderecoDecimal = parseBinarieToDecimal(enderecoBinario)/bSize;
+        var indiceCache = enderecoDecimal % (nroConjuntos);
+        return indiceCache;
+    }
+
+    public static int calculaNroBloco(Conjunto conjunto) {
+        return Arrays.stream(conjunto.getBlocos()).
+                filter(bloco -> bloco.isValido())
+                .toList().size();
+    }
+
+
 }

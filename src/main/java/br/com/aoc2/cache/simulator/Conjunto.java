@@ -2,6 +2,11 @@ package br.com.aoc2.cache.simulator;
 
 import br.com.aoc2.cache.simulator.util.Util;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static br.com.aoc2.cache.simulator.TipoEnderecamento.*;
+
 public class Conjunto {
     private Bloco[] blocos;
 
@@ -15,45 +20,30 @@ public class Conjunto {
     }
 
 
-    public Miss contem(String enderecoBinario, int bitTag) {
-        boolean hit = false;
-        boolean missCompulsorio = false;
-        boolean missConflito = false;
-
+    public Miss contem(String enderecoBinario, int bitTag, TipoEnderecamento tipo) {
+        Miss miss = null;
         for (var bloco : blocos) {
             if (bloco.isValido()) {
-                var decimal = Util.parseBinarieToDecimal(enderecoBinario);
-                String tag = enderecoBinario.substring(0, bitTag - 1);
+                String tag = enderecoBinario.substring(0, bitTag);
                 if (tag.equals(bloco.getTag())) {
-                    hit = true;
-                    break;
+                    return Miss.NAO_HOUVE;
                 } else {
-                    missConflito = true;
-                    missCompulsorio = false;
+                    if(tipo == MAPEAMENTO_DIRETO){
+                        miss = Miss.CONFLITO;
+                    }else if(tipo == TOTALMENTE_ASSOCIATIVO){
+                        miss =  Miss.CAPACIDADE;
+                    }else {
+                        miss =  temBlocoInvalido() ? Miss.COMPULSORIO: Miss.CONFLITO;
+                    }
                 }
-            }else{
-                missCompulsorio = true;
             }
-
         }
-
-        if (hit) {
-            return Miss.NAO_HOUVE;
-        } else if (missCompulsorio) {
-            var enderecoDecimal = String.valueOf(Util.parseBinarieToDecimal(enderecoBinario));
-            return Miss.COMPULSORIO;
-        } else {
-            return missConflito ? Miss.CONFLITO : Miss.CAPACIDADE;
-        }
-
+        return miss == null ? Miss.COMPULSORIO : miss;
     }
-
-    public boolean contemBlocoVago() {
-        for (var bloco : blocos) {
-            if (bloco.isInfoVazia()) {
-                return true;
-            }
-        }
-        return false;
+    public boolean temBlocoInvalido(){
+        List<Bloco> listaBloco = Arrays.stream(blocos).
+                filter(bloco -> !bloco.isValido()).
+                toList();
+        return !listaBloco.isEmpty();
     }
 }
