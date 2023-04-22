@@ -42,14 +42,6 @@ public class Cache {
     }
 
 
-    public PoliticaSubstituicao getPoliticaSubstituicao() {
-        return politicaSubstituicao;
-    }
-
-    public void setPoliticaSubstituicao(PoliticaSubstituicao politicaSubstituicao) {
-        this.politicaSubstituicao = politicaSubstituicao;
-    }
-
     public boolean contem(String enderecoBinario) {
         var nroConjuntos = conjuntos.length;
         var indiceCache = calculaIndiceCache(enderecoBinario, nroConjuntos, bSize);
@@ -133,7 +125,7 @@ public class Cache {
             double taxaMissCompulsorio = qntMissCompulsorio / totalMiss;
             double taxaMissCapacidade = qntMissCapacidade / totalMiss;
             double taxaMissConflito = qntMissConflito / totalMiss;
-            return String.format("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f  ",
+            return String.format("%.3f, %.3f, %.3f, %.3f, %.3f, %.3f  ",
                     totalAcesso, taxaHit, taxaMiss, taxaMissCompulsorio,
                     taxaMissCapacidade, taxaMissConflito);
         } else {
