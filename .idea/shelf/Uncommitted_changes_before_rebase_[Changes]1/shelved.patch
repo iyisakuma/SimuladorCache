@@ -1,0 +1,353 @@
+Index: src/main/java/br/com/aoc2/cache/simulator/Conjunto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package br.com.aoc2.cache.simulator;\n\nimport br.com.aoc2.cache.simulator.util.Util;\n\nimport java.util.Arrays;\nimport java.util.List;\n\nimport static br.com.aoc2.cache.simulator.TipoEnderecamento.*;\n\npublic class Conjunto {\n    private Bloco[] blocos;\n\n\n    public Conjunto(Bloco[] blocos) {\n        this.blocos = blocos;\n    }\n\n    public Bloco[] getBlocos() {\n        return blocos;\n    }\n\n\n    public Miss contem(String enderecoBinario, int bitTag, TipoEnderecamento tipo) {\n        Miss miss = null;\n        for (var bloco : blocos) {\n            if (bloco.isValido()) {\n                String tag = enderecoBinario.substring(0, bitTag);\n                if (tag.equals(bloco.getTag())) {\n                    return Miss.NAO_HOUVE;\n                } else {\n                    if(tipo == MAPEAMENTO_DIRETO){\n                        miss = Miss.CONFLITO;\n                    }else if(tipo == TOTALMENTE_ASSOCIATIVO){\n                        miss =  Miss.CAPACIDADE;\n                    }else {\n                        miss =  temBlocoInvalido() ? Miss.COMPULSORIO: Miss.CONFLITO;\n                    }\n                }\n            }\n        }\n        return miss == null ? Miss.COMPULSORIO : miss;\n    }\n    public boolean temBlocoInvalido(){\n        List<Bloco> listaBloco = Arrays.stream(blocos).\n                filter(bloco -> !bloco.isValido()).\n                toList();\n        return !listaBloco.isEmpty();\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java b/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java
+--- a/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java	(revision 989ffc82dc312837fcd0091fc6069f6fe3a3fcb6)
++++ b/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java	(date 1682202854320)
+@@ -19,28 +19,46 @@
+         return blocos;
+     }
+ 
++    public void setBlocos(Bloco[] blocos) {
++        this.blocos = blocos;
++    }
+ 
+     public Miss contem(String enderecoBinario, int bitTag, TipoEnderecamento tipo) {
+         Miss miss = null;
++        var decimal = Util.parseBinarieToDecimal(enderecoBinario);
+         for (var bloco : blocos) {
+             if (bloco.isValido()) {
+                 String tag = enderecoBinario.substring(0, bitTag);
+                 if (tag.equals(bloco.getTag())) {
+                     return Miss.NAO_HOUVE;
+                 } else {
+-                    if(tipo == MAPEAMENTO_DIRETO){
++                    if (tipo == MAPEAMENTO_DIRETO) {
+                         miss = Miss.CONFLITO;
+-                    }else if(tipo == TOTALMENTE_ASSOCIATIVO){
+-                        miss =  Miss.CAPACIDADE;
+-                    }else {
+-                        miss =  temBlocoInvalido() ? Miss.COMPULSORIO: Miss.CONFLITO;
++                    } else if (tipo == TOTALMENTE_ASSOCIATIVO) {
++                        miss = Miss.CAPACIDADE;
++                    } else {
++                        miss = temBlocoInvalido() ? Miss.COMPULSORIO : Miss.CONFLITO;
+                     }
+                 }
+             }
+         }
+         return miss == null ? Miss.COMPULSORIO : miss;
+     }
+-    public boolean temBlocoInvalido(){
++
++    public void atualizaPosicoes(Bloco blocoHit) {
++        var blocosAux = new Bloco[this.blocos.length];
++        blocosAux[0] = blocoHit;
++        var indice = 1;
++        for (var b : blocos) {
++            if (!blocoHit.getTag().equals(b.getTag())) {
++                blocosAux[indice] = b;
++                indice++;
++            }
++        }
++        this.blocos = blocosAux;
++    }
++
++    public boolean temBlocoInvalido() {
+         List<Bloco> listaBloco = Arrays.stream(blocos).
+                 filter(bloco -> !bloco.isValido()).
+                 toList();
+Index: src/main/java/br/com/aoc2/cache/simulator/util/Util.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package br.com.aoc2.cache.simulator.util;\n\nimport br.com.aoc2.cache.simulator.*;\n\nimport java.io.*;\nimport java.util.Arrays;\nimport java.util.logging.Level;\nimport java.util.logging.Logger;\n\npublic class Util {\n\n    public static void processaDados(Cache cache, String nomeArquivo) {\n        InputStream in = null;\n        try {\n            in = new BufferedInputStream(new FileInputStream(\"./src/main/resources/enderecos/\" + nomeArquivo));\n            byte[] bytes = new byte[4];\n            //Ler ate o final do arquivo\n            while ((in.read(bytes)) != -1) {\n                var enderecoMemoriaBits = Util.arrayBytesToBits(bytes);\n                var hit = cache.contem(enderecoMemoriaBits);\n                if (!hit) {\n                    cache.tratamentoFalta(enderecoMemoriaBits);\n                }\n            }\n        } catch (IOException ex) {\n            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, \"Arquivo não encontrado!\");\n        } finally {\n            Util.fechaFluxoDados(in);\n        }\n    }\n\n    public static boolean comandoDeLinhaEhValido(String[] args) {\n        return args.length == 6;\n    }\n\n    public static void fechaFluxoDados(InputStream in) {\n        if (in != null) {\n            try {\n                in.close();\n            } catch (IOException ex) {\n                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, ex.getMessage());\n            }\n        }\n    }\n\n    public static String arrayBytesToBits(byte[] bytes) {\n        StringBuilder bits = new StringBuilder(\"\");\n        for (byte b : bytes) {\n            int i = Byte.toUnsignedInt(b);\n            bits.append(i == 0 ? \"00000000\" : String.format(\"%8s\", Integer.toBinaryString(i)).replace(\" \", \"0\"));\n        }\n        return bits.toString();\n    }\n\n    public static Cache criaCache(String[] args) {\n\n        int nroConjuntos = Integer.parseInt(args[0]);\n        int tamanhoBloco = Integer.parseInt(args[1]);\n        int grauAssociatividade = Integer.parseInt(args[2]);\n        var politicaSubstituicao = PoliticaSubstituicao.valor(args[3]);\n\n        /*\n         * Calculo para encontrar quantos bits do endereco eh utilizado para offset\n         * */\n        int bitsOffSet = (int) (Math.log(tamanhoBloco) / Math.log(2));\n\n        /*\n         * Calculo para encontrar quantos bits do endereco eh utilizado para o indice\n         * */\n        int bitsIndice = (int) (Math.log(nroConjuntos) / Math.log(2));\n\n        /*\n         * Calculo para encontrar quantos bits do endereco eh utilizado para a tag\n         * */\n        int bitsTag = 32 - (bitsIndice + bitsOffSet);\n        return new Cache(nroConjuntos, grauAssociatividade, bitsTag, tamanhoBloco, politicaSubstituicao);\n    }\n\n\n\n    public static int parseBinarieToDecimal(String bits) {\n        int contador = 0;\n        int j = 0;\n        for (int i = bits.length() - 1; i >= 0; i--) {\n            if (bits.charAt(i) == '1') {\n                contador += Math.pow(2.0, j);\n            }\n            j++;\n        }\n        return contador;\n    }\n\n    public static int calculaIndiceCache(String enderecoBinario, int nroConjuntos, int bSize){\n        int enderecoDecimal = parseBinarieToDecimal(enderecoBinario)/bSize;\n        var indiceCache = enderecoDecimal % (nroConjuntos);\n        return indiceCache;\n    }\n\n    public static int calculaNroBloco(Conjunto conjunto) {\n        return Arrays.stream(conjunto.getBlocos()).\n                filter(bloco -> bloco.isValido())\n                .toList().size();\n    }\n\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/br/com/aoc2/cache/simulator/util/Util.java b/src/main/java/br/com/aoc2/cache/simulator/util/Util.java
+--- a/src/main/java/br/com/aoc2/cache/simulator/util/Util.java	(revision 989ffc82dc312837fcd0091fc6069f6fe3a3fcb6)
++++ b/src/main/java/br/com/aoc2/cache/simulator/util/Util.java	(date 1682202854339)
+@@ -90,7 +90,7 @@
+         return contador;
+     }
+ 
+-    public static int calculaIndiceCache(String enderecoBinario, int nroConjuntos, int bSize){
++    public static int calculaIndiceConjunto(String enderecoBinario, int nroConjuntos, int bSize){
+         int enderecoDecimal = parseBinarieToDecimal(enderecoBinario)/bSize;
+         var indiceCache = enderecoDecimal % (nroConjuntos);
+         return indiceCache;
+@@ -102,5 +102,4 @@
+                 .toList().size();
+     }
+ 
+-
+ }
+Index: src/main/java/br/com/aoc2/cache/simulator/Cache.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package br.com.aoc2.cache.simulator;\n\nimport br.com.aoc2.cache.simulator.util.Util;\n\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\nimport java.util.Random;\n\nimport static br.com.aoc2.cache.simulator.util.Util.*;\nimport static br.com.aoc2.cache.simulator.Miss.*;\n\npublic class Cache {\n    private Conjunto[] conjuntos;\n    private double totalAcesso = 0;\n    private double totalMiss = 0;\n    private double qntMissCompulsorio = 0;\n    private double qntMissCapacidade = 0;\n    private double qntMissConflito = 0;\n    private double totalHit = 0;\n\n    private int bitsTag;\n    private int bSize;\n    private PoliticaSubstituicao politicaSubstituicao;\n\n    public Cache(int numeroConjutos, int grauAssociatividade, int bitsTag, int bsize, PoliticaSubstituicao politicaSubstituicao) {\n        this.politicaSubstituicao = politicaSubstituicao;\n        this.bitsTag = bitsTag;\n        this.bSize = bsize;\n        this.conjuntos = new Conjunto[numeroConjutos];\n        for (int i = 0; i < numeroConjutos; i++) {\n            Bloco[] blocos = new Bloco[grauAssociatividade];\n            for (int j = 0; j < grauAssociatividade; j++) {\n                blocos[j] = new Bloco();\n            }\n            this.conjuntos[i] = new Conjunto(blocos);\n        }\n    }\n\n    public Conjunto[] getConjuntos() {\n        return conjuntos;\n    }\n\n\n    public PoliticaSubstituicao getPoliticaSubstituicao() {\n        return politicaSubstituicao;\n    }\n\n    public void setPoliticaSubstituicao(PoliticaSubstituicao politicaSubstituicao) {\n        this.politicaSubstituicao = politicaSubstituicao;\n    }\n\n    public boolean contem(String enderecoBinario) {\n        var nroConjuntos = conjuntos.length;\n        var indiceCache = calculaIndiceCache(enderecoBinario, nroConjuntos, bSize);\n        var conjunto = conjuntos[indiceCache];\n\n\n        boolean hit = false;\n        this.addAcesso();\n        var tipoEnderecamento = TipoEnderecamento.type(this);\n        Miss miss = conjunto.contem(enderecoBinario, bitsTag, tipoEnderecamento);\n        if(isFull() && miss != NAO_HOUVE){\n            miss = CAPACIDADE;\n        }\n        switch (miss) {\n            case CONFLITO:\n                addTotalMiss();\n                addMissConflito();\n                break;\n            case CAPACIDADE:\n                addTotalMiss();\n                addMissCapacidade();\n                break;\n            case COMPULSORIO:\n                addTotalMiss();\n                addMissCompulsorio();\n                break;\n            case NAO_HOUVE:\n                hit = true;\n                addTotalHit();\n                break;\n\n        }\n        return hit;\n    }\n\n    private boolean isFull() {\n        boolean isFull = true;\n        for(var conjunto : getConjuntos()){\n            for(var bloco: conjunto.getBlocos()){\n                if(!bloco.isValido()){\n                    isFull = false;\n                }\n            }\n        }\n        return isFull;\n    }\n\n\n    public void tratamentoFalta(String enderecoBinario) {\n        var indiceCache = calculaIndiceCache(enderecoBinario, getConjuntos().length, bSize);\n        var conjunto = this.getConjuntos()[indiceCache];\n        if (conjunto.temBlocoInvalido()) {\n            for (var bloco : conjunto.getBlocos()) {\n                if (!bloco.isValido()) {\n                    bloco.setValido(true);\n                    bloco.setTag(enderecoBinario.substring(0, bitsTag));\n                    return;\n                }\n            }\n        } else {\n            switch (politicaSubstituicao) {\n                case RANDOM:\n                    var random = new Random();\n                    int nroBlocos = conjunto.getBlocos().length;\n                    int indiceBloco = random.nextInt(nroBlocos);\n                    var blocoRandom = conjunto.getBlocos()[indiceBloco];\n                    blocoRandom.setTag(enderecoBinario.substring(0, bitsTag));\n                    return;\n                case FIFO:\n\n\n\n            }\n        }\n    }\n\n    public String mostraResultado(boolean isSaidaPadrao) {\n        if (isSaidaPadrao) {\n            double taxaMiss = (totalMiss / totalAcesso);\n            double taxaHit = totalHit / totalAcesso;\n            double taxaMissCompulsorio = qntMissCompulsorio / totalMiss;\n            double taxaMissCapacidade = qntMissCapacidade / totalMiss;\n            double taxaMissConflito = qntMissConflito / totalMiss;\n            return String.format(\"%.2f, %.2f, %.2f, %.2f, %.2f, %.2f  \",\n                    totalAcesso, taxaHit, taxaMiss, taxaMissCompulsorio,\n                    taxaMissCapacidade, taxaMissConflito);\n        } else {\n            var quantidadeMiss = (qntMissCapacidade + qntMissCompulsorio + qntMissConflito);\n            var txMiss = (quantidadeMiss / totalAcesso);\n            var txHit = 1 - txMiss;\n            var txMissCompulsorio = qntMissCompulsorio / quantidadeMiss;\n            var txMissCapacidade = qntMissCapacidade / quantidadeMiss;\n            var txMissConflito = qntMissConflito / quantidadeMiss;\n            return \"O total de acessos foi de: \" + totalAcesso + \"\\n\" + \"A quantidade de miss total eh: \" + quantidadeMiss + \"\\n\" + \"A taxa de miss: \" + txMiss * 100 + \"%\\n\" + \"A taxa de hit: \" + txHit * 100 + \"%\\n\" + \"A taxa de miss de Capacidade: \" + txMissCapacidade * 100 + \"%\\n\" + \"A taxa de miss Compulsório: \" + txMissCompulsorio * 100 + \"%\\n\" + \"A taxa de miss de Conflito: \" + txMissConflito * 100 + \"%\";\n        }\n    }\n\n    private int semRepetir(List<Integer> repetidos) {\n        List<Integer> aux = new ArrayList<>();\n        for (int a : repetidos) {\n            int c = 0;\n            for (int b : repetidos) {\n                if (a == b) {\n                    c++;\n                }\n            }\n            if (c > 1) {\n                aux.add(a);\n            }\n        }\n        return aux.size();\n    }\n\n    private void addMissCompulsorio() {\n        this.qntMissCompulsorio++;\n    }\n\n    private void addMissCapacidade() {\n        this.qntMissCapacidade++;\n    }\n\n    private void addMissConflito() {\n        this.qntMissConflito++;\n    }\n\n    private void addAcesso() {\n        this.totalAcesso++;\n    }\n\n    private void addTotalMiss() {\n        this.totalMiss++;\n    }\n\n    private void addTotalHit() {\n        this.totalHit++;\n    }\n\n    @Override\n    public String toString() {\n        return \"Cache{\" +\n                \", totalAcesso=\" + totalAcesso +\n                \", totalMiss=\" + totalMiss +\n                \", qntMissCompulsorio=\" + qntMissCompulsorio +\n                \", qntMissCapacidade=\" + qntMissCapacidade +\n                \", qntMissConflito=\" + qntMissConflito +\n                \", totalHit=\" + totalHit +\n                \", politicaSubstituicao=\" + politicaSubstituicao +\n                '}';\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/br/com/aoc2/cache/simulator/Cache.java b/src/main/java/br/com/aoc2/cache/simulator/Cache.java
+--- a/src/main/java/br/com/aoc2/cache/simulator/Cache.java	(revision 989ffc82dc312837fcd0091fc6069f6fe3a3fcb6)
++++ b/src/main/java/br/com/aoc2/cache/simulator/Cache.java	(date 1682203565181)
+@@ -2,9 +2,6 @@
+ 
+ import br.com.aoc2.cache.simulator.util.Util;
+ 
+-import java.util.ArrayList;
+-import java.util.Arrays;
+-import java.util.List;
+ import java.util.Random;
+ 
+ import static br.com.aoc2.cache.simulator.util.Util.*;
+@@ -41,18 +38,10 @@
+         return conjuntos;
+     }
+ 
+-
+-    public PoliticaSubstituicao getPoliticaSubstituicao() {
+-        return politicaSubstituicao;
+-    }
+-
+-    public void setPoliticaSubstituicao(PoliticaSubstituicao politicaSubstituicao) {
+-        this.politicaSubstituicao = politicaSubstituicao;
+-    }
+-
+     public boolean contem(String enderecoBinario) {
+         var nroConjuntos = conjuntos.length;
+-        var indiceCache = calculaIndiceCache(enderecoBinario, nroConjuntos, bSize);
++        var decimal = Util.parseBinarieToDecimal(enderecoBinario);
++        var indiceCache = calculaIndiceConjunto(enderecoBinario, nroConjuntos, bSize);
+         var conjunto = conjuntos[indiceCache];
+ 
+ 
+@@ -60,7 +49,7 @@
+         this.addAcesso();
+         var tipoEnderecamento = TipoEnderecamento.type(this);
+         Miss miss = conjunto.contem(enderecoBinario, bitsTag, tipoEnderecamento);
+-        if(isFull() && miss != NAO_HOUVE){
++        if (isFull() && miss != NAO_HOUVE) {
+             miss = CAPACIDADE;
+         }
+         switch (miss) {
+@@ -85,30 +74,27 @@
+         return hit;
+     }
+ 
+-    private boolean isFull() {
+-        boolean isFull = true;
+-        for(var conjunto : getConjuntos()){
+-            for(var bloco: conjunto.getBlocos()){
+-                if(!bloco.isValido()){
+-                    isFull = false;
+-                }
+-            }
+-        }
+-        return isFull;
+-    }
+-
+-
+     public void tratamentoFalta(String enderecoBinario) {
+-        var indiceCache = calculaIndiceCache(enderecoBinario, getConjuntos().length, bSize);
+-        var conjunto = this.getConjuntos()[indiceCache];
++        var indiceConjunto = calculaIndiceConjunto(enderecoBinario, getConjuntos().length, bSize);
++        var conjunto = this.getConjuntos()[indiceConjunto];
+         if (conjunto.temBlocoInvalido()) {
+-            for (var bloco : conjunto.getBlocos()) {
+-                if (!bloco.isValido()) {
+-                    bloco.setValido(true);
+-                    bloco.setTag(enderecoBinario.substring(0, bitsTag));
+-                    return;
++            var blocoAux = new Bloco();
++            var tag = enderecoBinario.substring(0, bitsTag);
++            blocoAux.setTag(tag);
++            blocoAux.setValido(true);
++            Bloco[] blocos = new Bloco[conjunto.getBlocos().length];
++            blocos[0] = blocoAux;
++            var indice = 1;
++            for (var bloco : conjunto.getBlocos()){
++                if(indice >= blocos.length){
++                    break;
+                 }
++                if(!bloco.getTag().equals(tag)){
++                    blocos[indice] = bloco;
++                    indice++;
++                }
+             }
++            conjunto.setBlocos(blocos);
+         } else {
+             switch (politicaSubstituicao) {
+                 case RANDOM:
+@@ -119,7 +105,13 @@
+                     blocoRandom.setTag(enderecoBinario.substring(0, bitsTag));
+                     return;
+                 case FIFO:
+-
++                    var blocoFifo = conjunto.getBlocos()[0];
++                    blocoFifo.setTag(enderecoBinario.substring(0, bitsTag));
++                    return;
++                case LRU:
++                    var blocoLru = conjunto.getBlocos()[conjunto.getBlocos().length - 1];
++                    blocoLru.setTag(enderecoBinario.substring(0, bitsTag));
++                    return;
+ 
+ 
+             }
+@@ -147,20 +139,29 @@
+         }
+     }
+ 
+-    private int semRepetir(List<Integer> repetidos) {
+-        List<Integer> aux = new ArrayList<>();
+-        for (int a : repetidos) {
+-            int c = 0;
+-            for (int b : repetidos) {
+-                if (a == b) {
+-                    c++;
+-                }
+-            }
+-            if (c > 1) {
+-                aux.add(a);
++    @Override
++    public String toString() {
++        return "Cache{" +
++                ", totalAcesso=" + totalAcesso +
++                ", totalMiss=" + totalMiss +
++                ", qntMissCompulsorio=" + qntMissCompulsorio +
++                ", qntMissCapacidade=" + qntMissCapacidade +
++                ", qntMissConflito=" + qntMissConflito +
++                ", totalHit=" + totalHit +
++                ", politicaSubstituicao=" + politicaSubstituicao +
++                '}';
++    }
++
++    private boolean isFull() {
++        boolean isFull = true;
++        for (var conjunto : getConjuntos()) {
++            for (var bloco : conjunto.getBlocos()) {
++                if (!bloco.isValido()) {
++                    isFull = false;
++                }
+             }
+         }
+-        return aux.size();
++        return isFull;
+     }
+ 
+     private void addMissCompulsorio() {
+@@ -186,17 +187,4 @@
+     private void addTotalHit() {
+         this.totalHit++;
+     }
+-
+-    @Override
+-    public String toString() {
+-        return "Cache{" +
+-                ", totalAcesso=" + totalAcesso +
+-                ", totalMiss=" + totalMiss +
+-                ", qntMissCompulsorio=" + qntMissCompulsorio +
+-                ", qntMissCapacidade=" + qntMissCapacidade +
+-                ", qntMissConflito=" + qntMissConflito +
+-                ", totalHit=" + totalHit +
+-                ", politicaSubstituicao=" + politicaSubstituicao +
+-                '}';
+-    }
+ }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"ee086405-cd26-46cd-8716-e6309f860764\" name=\"Changes\" comment=\"criado processo para tratar fault\">\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/TipoEnderecamento.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Operacoes.java\" beforeDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"JUnit3 Test Class\" />\n        <option value=\"Class\" />\n        <option value=\"Enum\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Rebase.Settings\">\n    <option name=\"NEW_BASE\" value=\"master\" />\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n    <option name=\"UPDATE_TYPE\" value=\"REBASE\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\">\n    <option name=\"selectedUrlAndAccountId\">\n      <UrlAndAccount>\n        <option name=\"accountId\" value=\"bb1dbae7-b613-486c-af72-8f1e1e43f447\" />\n        <option name=\"url\" value=\"https://github.com/iyisakuma/SimuladorCache.git\" />\n      </UrlAndAccount>\n    </option>\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"MavenImportPreferences\">\n    <option name=\"importingSettings\">\n      <MavenImportingSettings>\n        <option name=\"workspaceImportEnabled\" value=\"true\" />\n      </MavenImportingSettings>\n    </option>\n  </component>\n  <component name=\"ProjectId\" id=\"2O6Z1jNNcg8KEJBJkZOZHPJa9Xv\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\n    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,\n    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit3&quot;,\n    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit3&quot;: &quot;junit.framework.TestCase&quot;,\n    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,\n    &quot;last_opened_file_path&quot;: &quot;/home/yujisakuma/Pessoal/Estudos/Java/Spring/taco-cloud&quot;,\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\n    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,\n    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,\n    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,\n    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  }\n}</component>\n  <component name=\"RecentsManager\">\n    <key name=\"CopyFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/src/main/resources\" />\n    </key>\n    <key name=\"CreateTestDialog.Recents.Supers\">\n      <recent name=\"junit.framework.TestCase\" />\n    </key>\n    <key name=\"CreateTestDialog.RecentsKey\">\n      <recent name=\"br.com.aoc2.cache.simulator.util\" />\n    </key>\n  </component>\n  <component name=\"RunManager\" selected=\"Application.Main\">\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\n      <option name=\"MAIN_CLASS_NAME\" value=\"br.com.aoc2.cache.simulator.Main\" />\n      <module name=\"cache_simulator\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"br.com.aoc2.cache.simulator.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"UtilTest.testParseStringToBinarie\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"cache_simulator\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"br.com.aoc2.cache.simulator.util.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"br.com.aoc2.cache.simulator.util\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"br.com.aoc2.cache.simulator.util.UtilTest\" />\n      <option name=\"METHOD_NAME\" value=\"testParseStringToBinarie\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <recent_temporary>\n      <list>\n        <item itemvalue=\"Application.Main\" />\n        <item itemvalue=\"JUnit.UtilTest.testParseStringToBinarie\" />\n      </list>\n    </recent_temporary>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"ee086405-cd26-46cd-8716-e6309f860764\" name=\"Changes\" comment=\"\" />\n      <created>1680882778921</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1680882778921</updated>\n      <workItem from=\"1680882780178\" duration=\"5879000\" />\n      <workItem from=\"1680890073129\" duration=\"8364000\" />\n      <workItem from=\"1680971799445\" duration=\"6616000\" />\n      <workItem from=\"1681178354122\" duration=\"594000\" />\n      <workItem from=\"1681179642567\" duration=\"2896000\" />\n      <workItem from=\"1681313082501\" duration=\"2866000\" />\n      <workItem from=\"1681317596439\" duration=\"733000\" />\n      <workItem from=\"1681927764395\" duration=\"3260000\" />\n      <workItem from=\"1682020747272\" duration=\"935000\" />\n      <workItem from=\"1682021695713\" duration=\"11176000\" />\n      <workItem from=\"1682032953933\" duration=\"8318000\" />\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String).\">\n      <created>1680898396325</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1680898396326</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"criado construtur para palavras, blocos e Conjunto. Alem disso, coloquei os metodos no util\">\n      <created>1680979458372</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1680979458372</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"criado processo para verificar se ha hit ou miss na cache\">\n      <created>1681875661270</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1681875661271</updated>\n    </task>\n    <task id=\"LOCAL-00004\" summary=\"criado processo para verificar se ha hit ou miss na cache\">\n      <created>1681876435252</created>\n      <option name=\"number\" value=\"00004\" />\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1681876435252</updated>\n    </task>\n    <task id=\"LOCAL-00005\" summary=\"criado processo para tratar fault\">\n      <created>1681892941175</created>\n      <option name=\"number\" value=\"00005\" />\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1681892941175</updated>\n    </task>\n    <task id=\"LOCAL-00006\" summary=\"criado processo para tratar fault\">\n      <created>1681914803826</created>\n      <option name=\"number\" value=\"00006\" />\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1681914803826</updated>\n    </task>\n    <task id=\"LOCAL-00007\" summary=\"criado processo para tratar fault\">\n      <created>1681915273118</created>\n      <option name=\"number\" value=\"00007\" />\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1681915273118</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"8\" />\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String).\" />\n    <MESSAGE value=\"criado construtur para palavras, blocos e Conjunto. Alem disso, coloquei os metodos no util\" />\n    <MESSAGE value=\"criado processo para verificar se ha hit ou miss na cache\" />\n    <MESSAGE value=\"criado processo para tratar fault\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"criado processo para tratar fault\" />\n  </component>\n  <component name=\"XDebuggerManager\">\n    <breakpoint-manager>\n      <breakpoints>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java</url>\n          <line>63</line>\n          <option name=\"timeStamp\" value=\"16\" />\n        </line-breakpoint>\n      </breakpoints>\n    </breakpoint-manager>\n    <pin-to-top-manager>\n      <pinned-members>\n        <PinnedItemInfo parentTag=\"br.com.aoc2.cache.simulator.Cache\" memberName=\"conjuntos\" />\n        <PinnedItemInfo parentTag=\"br.com.aoc2.cache.simulator.Bloco\" memberName=\"valido\" />\n      </pinned-members>\n    </pin-to-top-manager>\n    <watches-manager>\n      <inline-watch fileUrl=\"file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java\" line=\"26\">\n        <watch expression=\"enderecoBinario\" language=\"JAVA\" />\n      </inline-watch>\n    </watches-manager>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 989ffc82dc312837fcd0091fc6069f6fe3a3fcb6)
++++ b/.idea/workspace.xml	(date 1682203806084)
+@@ -4,14 +4,10 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="criado processo para tratar fault">
+-      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/TipoEnderecamento.java" afterDir="false" />
++    <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="projeto funcionando, falta politica de substituicoes">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Operacoes.java" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -151,7 +147,9 @@
+       <workItem from="1681927764395" duration="3260000" />
+       <workItem from="1682020747272" duration="935000" />
+       <workItem from="1682021695713" duration="11176000" />
+-      <workItem from="1682032953933" duration="8318000" />
++      <workItem from="1682032953933" duration="9336000" />
++      <workItem from="1682083136886" duration="150000" />
++      <workItem from="1682199355652" duration="4450000" />
+     </task>
+     <task id="LOCAL-00001" summary="Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String).">
+       <created>1680898396325</created>
+@@ -202,7 +200,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1681915273118</updated>
+     </task>
+-    <option name="localTasksCounter" value="8" />
++    <task id="LOCAL-00008" summary="projeto funcionando, falta politica de substituicoes">
++      <created>1682043074418</created>
++      <option name="number" value="00008" />
++      <option name="presentableId" value="LOCAL-00008" />
++      <option name="project" value="LOCAL" />
++      <updated>1682043074418</updated>
++    </task>
++    <option name="localTasksCounter" value="9" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -213,15 +218,26 @@
+     <MESSAGE value="criado construtur para palavras, blocos e Conjunto. Alem disso, coloquei os metodos no util" />
+     <MESSAGE value="criado processo para verificar se ha hit ou miss na cache" />
+     <MESSAGE value="criado processo para tratar fault" />
+-    <option name="LAST_COMMIT_MESSAGE" value="criado processo para tratar fault" />
++    <MESSAGE value="projeto funcionando, falta politica de substituicoes" />
++    <option name="LAST_COMMIT_MESSAGE" value="projeto funcionando, falta politica de substituicoes" />
+   </component>
+   <component name="XDebuggerManager">
+     <breakpoint-manager>
+       <breakpoints>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java</url>
+-          <line>63</line>
+-          <option name="timeStamp" value="16" />
++          <line>107</line>
++          <option name="timeStamp" value="20" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-line">
++          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java</url>
++          <line>87</line>
++          <option name="timeStamp" value="27" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-line">
++          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java</url>
++          <line>61</line>
++          <option name="timeStamp" value="29" />
+         </line-breakpoint>
+       </breakpoints>
+     </breakpoint-manager>
+@@ -232,7 +248,7 @@
+       </pinned-members>
+     </pin-to-top-manager>
+     <watches-manager>
+-      <inline-watch fileUrl="file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" line="26">
++      <inline-watch fileUrl="file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Conjunto.java" line="30">
+         <watch expression="enderecoBinario" language="JAVA" />
+       </inline-watch>
+     </watches-manager>

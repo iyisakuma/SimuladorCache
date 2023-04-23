@@ -1,0 +1,126 @@
+Index: src/main/java/br/com/aoc2/cache/simulator/util/Util.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package br.com.aoc2.cache.simulator.util;\n\nimport br.com.aoc2.cache.simulator.*;\n\nimport java.io.*;\nimport java.util.logging.Level;\nimport java.util.logging.Logger;\n\npublic class Util {\n\n    public static void processaDados(Cache cache, String nomeArquivo) {\n        InputStream in = null;\n        try {\n            in = new BufferedInputStream(new FileInputStream(\"./src/main/resources/enderecos/\" + nomeArquivo));\n            byte[] bytes = new byte[4];\n            //Ler ate o final do arquivo\n            while ((in.read(bytes)) != -1) {\n                var enderecoMemoriaBits = Util.arrayBytesToBits(bytes);\n                var hit = cache.contem(enderecoMemoriaBits);\n                if (!hit) {\n                    cache.tratamentoFalta(enderecoMemoriaBits);\n                }\n            }\n        } catch (IOException ex) {\n            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, \"Arquivo não encontrado!\");\n        } finally {\n            Util.fechaFluxoDados(in);\n        }\n    }\n\n    public static boolean comandoDeLinhaEhValido(String[] args) {\n        return args.length == 6;\n    }\n\n    public static void fechaFluxoDados(InputStream in) {\n        if (in != null) {\n            try {\n                in.close();\n            } catch (IOException ex) {\n                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, ex.getMessage());\n            }\n        }\n    }\n\n    public static String arrayBytesToBits(byte[] bytes) {\n        StringBuilder bits = new StringBuilder(\"\");\n        for (byte b : bytes) {\n            int i = Byte.toUnsignedInt(b);\n            bits.append(i == 0 ? \"00000000\" : String.format(\"%8s\", Integer.toBinaryString(i)).replace(\" \", \"0\"));\n        }\n        return bits.toString();\n    }\n\n    public static Cache criaCache(String[] args) {\n\n        int nroConjuntos = Integer.parseInt(args[0]);\n        int tamanhoBloco = Integer.parseInt(args[1]);\n        int grauAssociatividade = Integer.parseInt(args[2]);\n        var politicaSubstituicao = PoliticaSubstituicao.valor(args[3]);\n\n        /*\n         * Calculo para encontrar quantos bits do endereco eh utilizado para offset\n         * */\n        int bitsOffSet = (int) (Math.log(tamanhoBloco) / Math.log(2));\n\n        /*\n         * Calculo para encontrar quantos bits do endereco eh utilizado para o indice\n         * */\n        int bitsIndice = (int) (Math.log(nroConjuntos) / Math.log(2));\n\n        /*\n         * Calculo para encontrar quantos bits do endereco eh utilizado para a tag\n         * */\n        int bitsTag = 32 - (bitsIndice + bitsOffSet);\n        return new Cache(nroConjuntos, grauAssociatividade, bitsTag, bitsIndice, tamanhoBloco,politicaSubstituicao);\n    }\n\n\n\n    public static int parseBinarieToDecimal(String bits) {\n        int contador = 0;\n        int j = 0;\n        for (int i = bits.length() - 1; i >= 0; i--) {\n            if (bits.charAt(i) == '1') {\n                contador += Math.pow(2.0, j);\n            }\n            j++;\n        }\n        return contador;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/br/com/aoc2/cache/simulator/util/Util.java b/src/main/java/br/com/aoc2/cache/simulator/util/Util.java
+--- a/src/main/java/br/com/aoc2/cache/simulator/util/Util.java	(revision bb0218d4b2bac720ef4d6b7bb9ad0cf3e0088e30)
++++ b/src/main/java/br/com/aoc2/cache/simulator/util/Util.java	(date 1681915458264)
+@@ -11,7 +11,7 @@
+     public static void processaDados(Cache cache, String nomeArquivo) {
+         InputStream in = null;
+         try {
+-            in = new BufferedInputStream(new FileInputStream("./src/main/resources/enderecos/" + nomeArquivo));
++            in = new BufferedInputStream(new FileInputStream("./" + nomeArquivo));
+             byte[] bytes = new byte[4];
+             //Ler ate o final do arquivo
+             while ((in.read(bytes)) != -1) {
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"ee086405-cd26-46cd-8716-e6309f860764\" name=\"Changes\" comment=\"criado processo para tratar fault\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"JUnit3 Test Class\" />\n        <option value=\"Class\" />\n        <option value=\"Enum\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Rebase.Settings\">\n    <option name=\"NEW_BASE\" value=\"master\" />\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n    <option name=\"UPDATE_TYPE\" value=\"REBASE\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\"><![CDATA[{\n  \"lastFilter\": {\n    \"state\": \"OPEN\"\n  }\n}]]></component>\n  <component name=\"GithubPullRequestsUISettings\">\n    <option name=\"selectedUrlAndAccountId\">\n      <UrlAndAccount>\n        <option name=\"accountId\" value=\"bb1dbae7-b613-486c-af72-8f1e1e43f447\" />\n        <option name=\"url\" value=\"https://github.com/iyisakuma/SimuladorCache.git\" />\n      </UrlAndAccount>\n    </option>\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"MavenImportPreferences\">\n    <option name=\"importingSettings\">\n      <MavenImportingSettings>\n        <option name=\"workspaceImportEnabled\" value=\"true\" />\n      </MavenImportingSettings>\n    </option>\n  </component>\n  <component name=\"ProjectId\" id=\"2O6Z1jNNcg8KEJBJkZOZHPJa9Xv\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\n    \"WebServerToolWindowFactoryState\": \"false\",\n    \"com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary\": \"JUnit3\",\n    \"com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit3\": \"junit.framework.TestCase\",\n    \"dart.analysis.tool.window.visible\": \"false\",\n    \"last_opened_file_path\": \"/home/yujisakuma/Pessoal/Estudos/Java/Spring/taco-cloud\",\n    \"node.js.detected.package.eslint\": \"true\",\n    \"node.js.detected.package.tslint\": \"true\",\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\n    \"project.structure.last.edited\": \"Modules\",\n    \"project.structure.proportion\": \"0.0\",\n    \"project.structure.side.proportion\": \"0.0\",\n    \"settings.editor.selected.configurable\": \"preferences.lookFeel\",\n    \"vue.rearranger.settings.migration\": \"true\"\n  }\n}]]></component>\n  <component name=\"RecentsManager\">\n    <key name=\"CopyFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/src/main/resources\" />\n    </key>\n    <key name=\"CreateTestDialog.Recents.Supers\">\n      <recent name=\"junit.framework.TestCase\" />\n    </key>\n    <key name=\"CreateTestDialog.RecentsKey\">\n      <recent name=\"br.com.aoc2.cache.simulator.util\" />\n    </key>\n  </component>\n  <component name=\"RunManager\" selected=\"Application.Main\">\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\n      <option name=\"MAIN_CLASS_NAME\" value=\"br.com.aoc2.cache.simulator.Main\" />\n      <module name=\"cache_simulator\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"br.com.aoc2.cache.simulator.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"UtilTest.testParseStringToBinarie\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"cache_simulator\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"br.com.aoc2.cache.simulator.util.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"br.com.aoc2.cache.simulator.util\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"br.com.aoc2.cache.simulator.util.UtilTest\" />\n      <option name=\"METHOD_NAME\" value=\"testParseStringToBinarie\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <recent_temporary>\n      <list>\n        <item itemvalue=\"Application.Main\" />\n        <item itemvalue=\"JUnit.UtilTest.testParseStringToBinarie\" />\n      </list>\n    </recent_temporary>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"ee086405-cd26-46cd-8716-e6309f860764\" name=\"Changes\" comment=\"\" />\n      <created>1680882778921</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1680882778921</updated>\n      <workItem from=\"1680882780178\" duration=\"5879000\" />\n      <workItem from=\"1680890073129\" duration=\"8364000\" />\n      <workItem from=\"1680971799445\" duration=\"6616000\" />\n      <workItem from=\"1681178354122\" duration=\"594000\" />\n      <workItem from=\"1681179642567\" duration=\"2896000\" />\n      <workItem from=\"1681313082501\" duration=\"2866000\" />\n      <workItem from=\"1681317596439\" duration=\"733000\" />\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String).\">\n      <created>1680898396325</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1680898396326</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"criado construtur para palavras, blocos e Conjunto. Alem disso, coloquei os metodos no util\">\n      <created>1680979458372</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1680979458372</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"criado processo para verificar se ha hit ou miss na cache\">\n      <created>1681875661270</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1681875661271</updated>\n    </task>\n    <task id=\"LOCAL-00004\" summary=\"criado processo para verificar se ha hit ou miss na cache\">\n      <created>1681876435252</created>\n      <option name=\"number\" value=\"00004\" />\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1681876435252</updated>\n    </task>\n    <task id=\"LOCAL-00005\" summary=\"criado processo para tratar fault\">\n      <created>1681892941175</created>\n      <option name=\"number\" value=\"00005\" />\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1681892941175</updated>\n    </task>\n    <task id=\"LOCAL-00006\" summary=\"criado processo para tratar fault\">\n      <created>1681914803826</created>\n      <option name=\"number\" value=\"00006\" />\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1681914803826</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"7\" />\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String).\" />\n    <MESSAGE value=\"criado construtur para palavras, blocos e Conjunto. Alem disso, coloquei os metodos no util\" />\n    <MESSAGE value=\"criado processo para verificar se ha hit ou miss na cache\" />\n    <MESSAGE value=\"criado processo para tratar fault\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"criado processo para tratar fault\" />\n  </component>\n  <component name=\"XDebuggerManager\">\n    <breakpoint-manager>\n      <breakpoints>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Cache.java</url>\n          <line>96</line>\n          <option name=\"timeStamp\" value=\"20\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java</url>\n          <line>37</line>\n          <option name=\"timeStamp\" value=\"24\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Bloco.java</url>\n          <line>45</line>\n          <option name=\"timeStamp\" value=\"28\" />\n        </line-breakpoint>\n      </breakpoints>\n    </breakpoint-manager>\n    <pin-to-top-manager>\n      <pinned-members>\n        <PinnedItemInfo parentTag=\"br.com.aoc2.cache.simulator.Cache\" memberName=\"conjuntos\" />\n        <PinnedItemInfo parentTag=\"br.com.aoc2.cache.simulator.Conjunto\" memberName=\"blocos\" />\n        <PinnedItemInfo parentTag=\"br.com.aoc2.cache.simulator.Bloco\" memberName=\"valido\" />\n      </pinned-members>\n    </pin-to-top-manager>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision bb0218d4b2bac720ef4d6b7bb9ad0cf3e0088e30)
++++ b/.idea/workspace.xml	(date 1681930285149)
+@@ -6,7 +6,7 @@
+   <component name="ChangeListManager">
+     <list default="true" id="ee086405-cd26-46cd-8716-e6309f860764" name="Changes" comment="criado processo para tratar fault">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/Main.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aoc2/cache/simulator/util/Util.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -29,11 +29,11 @@
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+     <option name="UPDATE_TYPE" value="REBASE" />
+   </component>
+-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+-  "lastFilter": {
+-    "state": "OPEN"
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="GithubPullRequestsUISettings">
+     <option name="selectedUrlAndAccountId">
+       <UrlAndAccount>
+@@ -58,27 +58,27 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "WebServerToolWindowFactoryState": "false",
+-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit3",
+-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit3": "junit.framework.TestCase",
+-    "dart.analysis.tool.window.visible": "false",
+-    "last_opened_file_path": "/home/yujisakuma/Pessoal/Estudos/Java/Spring/taco-cloud",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "project.structure.last.edited": "Modules",
+-    "project.structure.proportion": "0.0",
+-    "project.structure.side.proportion": "0.0",
+-    "settings.editor.selected.configurable": "preferences.lookFeel",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
++    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit3&quot;,
++    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit3&quot;: &quot;junit.framework.TestCase&quot;,
++    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
++    &quot;last_opened_file_path&quot;: &quot;/home/yujisakuma/Pessoal/Estudos/Java/Spring/taco-cloud&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
++    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
++    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="$PROJECT_DIR$/src/main/resources" />
+@@ -142,6 +142,7 @@
+       <workItem from="1681179642567" duration="2896000" />
+       <workItem from="1681313082501" duration="2866000" />
+       <workItem from="1681317596439" duration="733000" />
++      <workItem from="1681927764395" duration="1289000" />
+     </task>
+     <task id="LOCAL-00001" summary="Inicializado o projeto e criado a estrutura, assim como a conversao de bytes para binarios(String).">
+       <created>1680898396325</created>
+@@ -185,7 +186,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1681914803826</updated>
+     </task>
+-    <option name="localTasksCounter" value="7" />
++    <task id="LOCAL-00007" summary="criado processo para tratar fault">
++      <created>1681915273118</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1681915273118</updated>
++    </task>
++    <option name="localTasksCounter" value="8" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
